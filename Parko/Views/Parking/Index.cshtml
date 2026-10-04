@@ -1,0 +1,31 @@
+﻿@model CheckInVm
+<div class="card">
+    <h3>Vehicle entrance</h3>
+    @if (TempData["Ok"] != null)
+    {
+        <div class="msg ok">@TempData["Ok"]</div>
+    }
+    @if (TempData["Err"] != null)
+    {
+        <div class="msg err">@TempData["Err"]</div>
+    }
+    <form asp-action="CheckIn" method="post">
+        <input asp-for="Vehicle" id="plate" placeholder="Plate" autocomplete="off">
+        <input asp-for="Model" id="model" placeholder="Model">
+        <input asp-for="SpaceId" placeholder="Space 1–100 (optional)">
+        <button>Register</button>
+        <div id="vipmsg"></div>
+    </form>
+</div>
+<div id="board"><div class="card">Loading…</div></div>
+<script>
+    document.getElementById('plate').addEventListener('input', async e => {
+      const box = document.getElementById('vipmsg'); box.innerHTML = '';
+      if (e.target.value.length < 4) return;
+      const r = await (await fetch('/Parking/Lookup?plate=' + encodeURIComponent(e.target.value))).json();
+      if (!r.vip) return;
+      document.getElementById('model').value = r.model;
+      box.innerHTML = `<div class="msg"><b>VIP Car</b> – ${r.model}, ${r.color}, ${r.year}<br>Client: ${r.owner}, ${r.city}, ${r.country}, ${r.phone}<br>Points: ${r.points} (recharge after ${r.days} days)</div>`;
+    });
+    fetch('/Parking/Board').then(r => r.text()).then(h => document.getElementById('board').innerHTML = h);
+</script>

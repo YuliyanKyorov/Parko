@@ -14,17 +14,17 @@ namespace Parko.Models
         public string City { get; set; } = "";
         [Required] 
         public string Country { get; set; } = "";
-        [Required, RegularExpression(@"^\+?[0-9 ]{7,15}$", ErrorMessage = "Невалиден телефон")] 
+        [Required, RegularExpression(@"^\+?[0-9 ]{7,15}$", ErrorMessage = "Invalid phone number")] 
         public string Phone { get; set; } = "";
         [Required, EmailAddress] 
         public string Email { get; set; } = "";
-        [Required, RegularExpression(@"^[A-ZА-Яa-zа-я0-9 \-]{4,12}$", ErrorMessage = "Номер: 4–10 букви/цифри")] 
+        [Required, RegularExpression(@"^[A-ZА-Яa-zа-я0-9 \-]{4,12}$", ErrorMessage = "Number: 4–10 letters/digits")] 
         public string Vehicle { get; set; } = "";
         [Required] 
         public string Model { get; set; } = "";
         [Required] 
         public string Color { get; set; } = "";
-        [Range(1950, 2100, ErrorMessage = "Невалидна година")] 
+        [Range(1950, 2100, ErrorMessage = "Invalid year")] 
         public int Year { get; set; } = DateTime.Now.Year;
 
 

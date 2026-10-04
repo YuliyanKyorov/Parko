@@ -11,7 +11,7 @@ namespace Parko.Models
         [Range(0, Monthly)] public int Points { get; set; } = Monthly;
         public DateTime LastReset { get; set; } = DateTime.Now;
         [NotMapped]
-        public int ChargingDays =>   // дни до 1-во число
+        public int ChargingDays =>   // days until the 1st of the month
             (int)Math.Ceiling((new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1) - DateTime.Now).TotalDays);
 
 

@@ -15,7 +15,7 @@ namespace Parko.Models
         public string City { get; set; } = "";
         [Required, StringLength(60)] 
         public string Country { get; set; } = "";
-        [Required, RegularExpression(@"^\+?[0-9 ]{7,15}$", ErrorMessage = "Невалиден телефон")]
+        [Required, RegularExpression(@"^\+?[0-9 ]{7,15}$", ErrorMessage = "Invalid phone number")]
         public string Phone { get; set; } = "";
         [Required, EmailAddress] 
         public string Email { get; set; } = "";
