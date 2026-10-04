@@ -1,9 +1,9 @@
 @model VipCreateVm
-<div class="card"><h3>Нов VIP клиент и автомобил</h3>
+<div class="card"><h3>New VIP client and car</h3>
 <form asp-action="Create" method="post">
 <div asp-validation-summary="All" class="text-danger"></div>
-<div><input asp-for="FirstName" placeholder="Име"><input asp-for="LastName" placeholder="Фамилия"></div>
-<div><input asp-for="Address" placeholder="Адрес"><input asp-for="City" placeholder="Град"><input asp-for="Country" placeholder="Държава"></div>
-<div><input asp-for="Phone" placeholder="Телефон"><input asp-for="Email" placeholder="E-mail"></div>
-<div><input asp-for="Vehicle" placeholder="Номер"><input asp-for="Model" placeholder="Модел"><input asp-for="Color" placeholder="Цвят"><input asp-for="Year" placeholder="Година"></div>
-<button>Запази</button></form></div>
+<div><input asp-for="FirstName" placeholder="Name"><input asp-for="LastName" placeholder="Last Name"></div>
+<div><input asp-for="Address" placeholder="Address"><input asp-for="City" placeholder="City"><input asp-for="Country" placeholder="Country"></div>
+<div><input asp-for="Phone" placeholder="Phone"><input asp-for="Email" placeholder="E-mail"></div>
+<div><input asp-for="Vehicle" placeholder="Vehicle Number"><input asp-for="Model" placeholder="Model"><input asp-for="Color" placeholder="Color"><input asp-for="Year" placeholder="Year"></div>
+<button>Save</button></form></div>
