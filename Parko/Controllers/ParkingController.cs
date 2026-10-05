@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using Parko.Data;
 using Parko.Models;
 using Parko.Services;
@@ -12,7 +13,10 @@ public class ParkingController : Controller {
     public IActionResult Index() => View(new CheckInVm());
 
     public async Task<IActionResult> Board() {
-        ViewBag.Cars = await _db.Cars.OrderByDescending(c => c.Id).Take(50).ToListAsync();
+        var activeCars = await _db.Cars.Where(c => c.ReleaseTime == null).ToListAsync();
+        var recentReleasedCars = await _db.Cars.Where(c => c.ReleaseTime != null)
+            .OrderByDescending(c => c.Id).Take(50).ToListAsync();
+        ViewBag.Cars = activeCars.Concat(recentReleasedCars).OrderByDescending(c => c.Id).ToList();
         return PartialView("_Board", await _db.ParkingSpaces.Include(s => s.Cars).OrderBy(s => s.Id).ToListAsync());
     }
 
@@ -35,8 +39,13 @@ public class ParkingController : Controller {
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> CheckOut(int id, int? simMinutes) {
-        TempData["Ok"] = await _svc.CheckOutAsync(id, simMinutes);
+    public async Task<IActionResult> CheckOut(int id, [Range(0, int.MaxValue)] int? simMinutes) {
+        if (!ModelState.IsValid) {
+            TempData["Err"] = "Minutes must be a non-negative whole number.";
+            return RedirectToAction(nameof(Index));
+        }
+        var (ok, msg) = await _svc.CheckOutAsync(id, simMinutes);
+        TempData[ok ? "Ok" : "Err"] = msg;
         return RedirectToAction(nameof(Index));
     }
 }

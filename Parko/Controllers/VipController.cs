@@ -17,11 +17,25 @@ public class VipController : Controller {
     public IActionResult Create() => View(new VipCreateVm());
 
     [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int clientId) {
+        var client = await _db.Clients.FindAsync(clientId);
+        if (client == null) {
+            TempData["Err"] = "VIP client not found.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        _db.Clients.Remove(client);
+        await _db.SaveChangesAsync();
+        TempData["Ok"] = "VIP client deleted.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(VipCreateVm vm) {
         var plate = ParkingService.Norm(vm.Vehicle);
         if (await _db.VipCarRecords.AnyAsync(v => v.Vehicle == plate))
-            ModelState.AddModelError(nameof(vm.Vehicle), "Номерът вече е в VIP базата.");
-        if (vm.Year > DateTime.Now.Year + 1) ModelState.AddModelError(nameof(vm.Year), "Годината е в бъдещето.");
+            ModelState.AddModelError(nameof(vm.Vehicle), "The number is already in the VIP database.");
+        if (vm.Year > DateTime.Now.Year + 1) ModelState.AddModelError(nameof(vm.Year), "The year is in the future.");
         if (!ModelState.IsValid) return View(vm);
         var client = new Client { FirstName = vm.FirstName, LastName = vm.LastName, Address = vm.Address, City = vm.City,
             Country = vm.Country, Phone = vm.Phone, Email = vm.Email, VipPoint = new VipPoint() };

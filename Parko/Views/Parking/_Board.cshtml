@@ -3,7 +3,7 @@
     var cars = (List<Car>)ViewBag.Cars;
 }
 <div class="card">
-    <h3>Места: @Model.Count(s => s.Current == null) свободни / @Model.Count(s => s.Current != null) заети</h3>
+    <h3>Spaces: @Model.Count(s => s.Current == null) free / @Model.Count(s => s.Current != null) occupied</h3>
     <div class="grid">
         @foreach (var s in Model)
         {
@@ -21,9 +21,9 @@
     </div>
 </div>
 <div class="card">
-    <h3>Car (последните 50)</h3><div class="sc">
+    <h3>Car (last 50)</h3><div class="sc">
     <table>
-        <tr><th>Id</th><th>Vehicle</th><th>Model</th><th>Място</th><th>Entry time</th><th>Release time</th><th>Price</th><th></th></tr>
+        <tr><th>Id</th><th>Vehicle</th><th>Model</th><th>Space</th><th>Entry time</th><th>Release time</th><th>Price</th><th></th></tr>
         @foreach (var c in cars)
         {
             <tr>
@@ -33,11 +33,11 @@
                 <td>@c.ParkingSpaceId</td>
                 <td>@c.EntryTime</td>
                 <td>@c.ReleaseTime</td>
-                <td>@(c.Price.HasValue ? c.Price.Value.ToString("F2") + " €" : "")</td>
+                <td>@(c.UsedPoint ? "1 VIP" : c.Price.HasValue ? c.Price.Value.ToString("F2") + " €" : "")</td>
                 <td>
                     @if (c.ReleaseTime == null)
                     {
-                        <form action="/Parking/CheckOut" method="post" style="display:flex"><input type="hidden" name="id" value="@c.Id"><input name="simMinutes" type="number" placeholder="мин (тест)" style="width:90px"><button>Излизане</button></form>
+                        <form asp-controller="Parking" asp-action="CheckOut" method="post" style="display:flex"><input type="hidden" name="id" value="@c.Id"><input name="simMinutes" type="number" min="0" placeholder="мин (тест)" style="width:90px"><button>Излизане</button></form>
                     }
                 </td>
             </tr>

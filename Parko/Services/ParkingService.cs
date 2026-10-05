@@ -70,18 +70,19 @@ public class ParkingService
             (usePoint ? " VIP: 1 point reported." : vip != null ? " VIP points exhausted – 1.20 €/hour." : ""));// Регистрация на място. VIP: 1 точка отчетена  или са изчерпани – 1,20 €/час.
     }
 
-    public async Task<string> CheckOutAsync(int id, int? simMinutes)
+    public async Task<(bool ok, string msg)> CheckOutAsync(int id, int? simMinutes)
     {
+        if (simMinutes < 0) return (false, "Minutes must be non-negative.");
         var car = await _db.Cars.FindAsync(id);
-        if (car == null || car.ReleaseTime != null) return "Car not found.";// Колата не е намерена.
+        if (car == null || car.ReleaseTime != null) return (false, "Car not found.");// Колата не е намерена.
         car.ReleaseTime = simMinutes.HasValue ? car.EntryTime.AddMinutes(simMinutes.Value) : DateTime.Now;
         var min = (car.ReleaseTime.Value - car.EntryTime).TotalMinutes;
         car.Price = car.UsedPoint ? 0m
             : car.IsVip ? (min <= 15 ? 0m : (decimal)Math.Ceiling(min / 60) * 1.20m)
             : Price(min);
         await _db.SaveChangesAsync();
-        return $"Space {car.ParkingSpaceId} is free. Stay: {Math.Round(min)} min. Price: {car.Price:F2} €" +
-               (car.UsedPoint ? " (paid with 1 VIP point)" : "");// Мястото е свободно. Престой: минути. Цена: евро (платено с 1 VIP точка)
+        return (true, $"Space {car.ParkingSpaceId} is free. Stay: {Math.Round(min)} min. Price: {car.Price:F2} €" +
+               (car.UsedPoint ? " (paid with 1 VIP point)" : ""));// Мястото е свободно. Престой: минути. Цена: евро (платено с 1 VIP точка)
     }
 }
 /* ВНИМАНИЕ: Да проверя дали има нужда от метод за извеждане на текущите заети места и свободните места, както и списък с всички коли в паркинга.

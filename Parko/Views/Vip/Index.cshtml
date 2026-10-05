@@ -1,8 +1,12 @@
 @model List<VipCarRecord>
-<div class="card"><h3>VIP клиенти</h3><a asp-action="Create">+ Нов VIP клиент</a>
+<div class="card"><h3>VIP клиенти</h3><a asp-action="Create">+ New VIP client</a>
+@if (TempData["Ok"] != null) { <div class="msg ok">@TempData["Ok"]</div> }
+@if (TempData["Err"] != null) { <div class="msg err">@TempData["Err"]</div> }
 <div class="sc"><table>
-<tr><th>Клиент</th><th>Vehicle</th><th>Model</th><th>Color</th><th>Year</th><th>Адрес</th><th>Град</th><th>Държава</th><th>Телефон</th><th>E-mail</th><th>Points</th><th>Charging (дни)</th></tr>
+<tr><th>Клиент</th><th>Vehicle</th><th>Model</th><th>Color</th><th>Year</th><th>Адрес</th><th>Град</th><th>Държава</th><th>Телефон</th><th>E-mail</th><th>Points</th><th>Charging (дни)</th><th></th></tr>
 @foreach (var v in Model) { var c = v.Client!; <tr>
 <td>@c.FirstName @c.LastName</td><td>@v.Vehicle</td><td>@v.Model</td><td>@v.Color</td><td>@v.Year</td><td>@c.Address</td><td>@c.City</td><td>@c.Country</td><td>@c.Phone</td><td>@c.Email</td>
-<td>@(c.VipPoint?.Points) / @VipPoint.Monthly</td><td>@(c.VipPoint?.ChargingDays)</td></tr> }
+<td>@(c.VipPoint?.Points) / @VipPoint.Monthly</td><td>@(c.VipPoint?.ChargingDays)</td>
+<td><form asp-action="Delete" method="post" onsubmit="return confirm('Delete this VIP client and all associated VIP cars?');">
+<input type="hidden" name="clientId" value="@c.Id"><button type="submit">Delete</button></form></td></tr> }
 </table></div></div>
