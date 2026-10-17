@@ -32,7 +32,7 @@ namespace ParkingSystemProject.Models
 
         public int Points { get; set; } = 40;
 
-        public DateTime PointsResetDate { get; set; }
+        public DateTime PointsResetDate { get; set; } = DateTime.UtcNow;
 
         public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
     }

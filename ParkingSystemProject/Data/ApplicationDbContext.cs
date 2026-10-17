@@ -4,7 +4,13 @@ using ParkingSystemProject.Models;
 namespace ParkingSystemProject.Data
 {
     public class ApplicationDbContext : DbContext
-    {      
+    {
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            options.UseSqlServer(
+                @"Server=DESKTOP-6IHPPVM\SQLEXPRESS;Database=MyDatabase;Trusted_Connection=True;TrustServerCertificate=True;");
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

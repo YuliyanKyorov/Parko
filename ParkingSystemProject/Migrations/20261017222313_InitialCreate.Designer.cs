@@ -12,7 +12,7 @@ using ParkingSystemProject.Data;
 namespace ParkingSystemProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260927144239_InitialCreate")]
+    [Migration("20261017222313_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

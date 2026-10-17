@@ -1,0 +1,14 @@
+@model ParkingSystemProject.Models.ParkingRecord
+
+@{
+    ViewData["Title"] = "Delete Parking Record";
+}
+
+<h1>Delete Parking Record</h1>
+<h3>Delete the parking record for @Model.Vehicle.RegistrationNumber?</h3>
+<p>Parking space: @Model.ParkingSpace.SpaceNumber; entered: @Model.EntryTime</p>
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index">Cancel</a>
+</form>

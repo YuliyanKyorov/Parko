@@ -12,7 +12,7 @@
 
         public ParkingSpace ParkingSpace { get; set; } = null!;
 
-        public DateTime EntryTime { get; set; }
+        public DateTime EntryTime { get; set; } = DateTime.Now;
 
         public DateTime? ExitTime { get; set; }
 
