@@ -1,8 +1,38 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="parking-home">
+    <div class="parking-home__intro">
+        <p class="parking-home__eyebrow">PARKING MANAGEMENT</p>
+        <h1>Welcome</h1>
+        <p class="parking-home__lead">Choose what you would like to manage.</p>
+    </div>
+
+    <div class="parking-dashboard" aria-label="Main sections">
+        <a class="parking-card" asp-controller="ParkingRecords" asp-action="Index">
+            <span class="parking-card__icon" aria-hidden="true">🧾</span>
+            <span class="parking-card__title">Parking Records</span>
+            <span class="parking-card__description">View and manage parking sessions.</span>
+            <span class="parking-card__action">Open section <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="parking-card" asp-controller="ParkingSpaces" asp-action="Index">
+            <span class="parking-card__icon" aria-hidden="true">🅿️</span>
+            <span class="parking-card__title">Parking Spaces</span>
+            <span class="parking-card__description">View spaces and their availability.</span>
+            <span class="parking-card__action">Open section <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="parking-card" asp-controller="Vehicles" asp-action="Index">
+            <span class="parking-card__icon" aria-hidden="true">🚗</span>
+            <span class="parking-card__title">Vehicles</span>
+            <span class="parking-card__description">Register and view vehicles.</span>
+            <span class="parking-card__action">Open section <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="parking-card" asp-controller="VipCustomers" asp-action="Index">
+            <span class="parking-card__icon" aria-hidden="true">⭐</span>
+            <span class="parking-card__title">VIP Customers</span>
+            <span class="parking-card__description">Manage customers and their points.</span>
+            <span class="parking-card__action">Open section <span aria-hidden="true">→</span></span>
+        </a>
+    </div>
+</section>
