@@ -1,0 +1,13 @@
+﻿@*
+    // This is the default error view used by the application.
+*@
+@{
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h2>@ViewBag.Code – @ViewBag.Title</h2>
+        <p>@ViewBag.Message</p>
+        <p class="text-secondary small">Request code: @ViewBag.RequestId</p>
+        <a class="btn btn-primary" asp-controller="Parking" asp-action="Index">← To the parking lot.</a>
+      </div>
+    </div>
+}

@@ -1,0 +1,105 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Parko";
+    ViewData["MainClass"] = "container-fluid p-0";
+}
+
+<section class="position-relative d-flex align-items-center min-vh-100 overflow-hidden bg-dark text-white">
+    <img src="~/images/parking-hero.jpg" alt="" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
+
+    <div class="container-fluid position-relative py-5">
+        <div class="row align-items-center g-4">
+            <div class="col-12 col-lg-9">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-9 col-xl-7">
+                        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <div class="bg-primary text-center py-2">
+                                    <span class="fw-semibold text-white">Вход</span>
+                                </div>
+                                <div class="card-body p-4 p-lg-5">
+                                    <h1 class="h3 text-primary fw-bold mb-1">Здравейте, @User.Identity.Name!</h1>
+                                    <p class="text-secondary mb-4">Добре дошли обратно в Parko.</p>
+                                    <a asp-controller="Parking" asp-action="Index" class="btn btn-warning fw-semibold px-4">Към паркинга</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="bg-primary text-center py-2">
+                                    <span class="fw-semibold text-white">Вход</span>
+                                    <span class="text-white-50 px-2">|</span>
+                                    <a asp-controller="Account" asp-action="Register" class="link-light text-decoration-none">Регистрация</a>
+                                </div>
+                                <div class="card-body p-4 p-lg-5">
+                                    <h1 class="h3 text-primary fw-bold mb-1">Добре дошли в Parko</h1>
+                                    <p class="text-secondary mb-4">Влезте, за да продължите.</p>
+                                    <form asp-controller="Account" asp-action="Login" method="post">
+                                        @if (!ViewData.ModelState.IsValid)
+                                        {
+                                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                                        }
+                                        <div class="mb-3">
+                                            <label asp-for="Login" class="form-label"></label>
+                                            <input asp-for="Login" class="form-control" autocomplete="username" />
+                                            <span asp-validation-for="Login" class="text-danger small"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label asp-for="Password" class="form-label"></label>
+                                            <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                                            <span asp-validation-for="Password" class="text-danger small"></span>
+                                        </div>
+                                        <div class="form-check mb-4">
+                                            <input asp-for="RememberMe" class="form-check-input" />
+                                            <label asp-for="RememberMe" class="form-check-label"></label>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning fw-semibold px-4">Вход</button>
+                                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary ms-2">Създай акаунт</a>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center mt-5">
+                    <div class="col-auto">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-4 bg-primary p-3 fs-1" aria-hidden="true">🅿️🚘</span>
+                    </div>
+                    <div class="col">
+                        <h2 class="display-5 fw-bold mb-0">Parking System</h2>
+                        <p class="fs-5 text-white-50 mb-0">По-лесно паркиране. По-добро управление.</p>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="col-12 col-lg-3">
+                <div class="rounded-4 bg-primary bg-opacity-75 p-3 p-xl-4 shadow">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🚘</span>
+                            <span class="fw-semibold">Регистрация на автомобил</span>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🅿️</span>
+                            <span class="fw-semibold">Управление на паркоместа</span>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">⏱️</span>
+                            <span class="fw-semibold">Отчитане на време и цена</span>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">⭐</span>
+                            <span class="fw-semibold">VIP карти и точки</span>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 pt-3">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🛡️</span>
+                            <span class="fw-semibold">Сигурност и контрол</span>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>

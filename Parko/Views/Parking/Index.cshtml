@@ -1,0 +1,184 @@
+@model ParkingDashboardViewModel
+@{
+    ViewData["Title"] = Model.IsAdmin ? "Административен панел" : "Свободни места";
+}
+
+@if (TempData["Ok"] is string successMessage)
+{
+    <div class="alert alert-success" role="status">@successMessage</div>
+}
+@if (TempData["Err"] is string errorMessage)
+{
+    <div class="alert alert-danger" role="alert">@errorMessage</div>
+}
+
+@if (Model.IsAdmin)
+{
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <h1 class="h3">Административен панел</h1>
+            <p class="text-secondary">Виждате състоянието на паркинга и можете да регистрирате и освобождавате автомобили.</p>
+            <form asp-action="CheckIn" method="post" class="row g-3">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="col-12 col-md-4">
+                    <label asp-for="AdminCheckIn.Vehicle" class="form-label">Регистрационен номер</label>
+                    <input asp-for="AdminCheckIn.Vehicle" name="Vehicle" class="form-control" autocomplete="off">
+                </div>
+                <div class="col-12 col-md-4">
+                    <label asp-for="AdminCheckIn.Model" class="form-label">Модел</label>
+                    <input asp-for="AdminCheckIn.Model" name="Model" class="form-control">
+                </div>
+                <div class="col-12 col-md-2">
+                    <label asp-for="AdminCheckIn.SpaceId" class="form-label">Място</label>
+                    <select asp-for="AdminCheckIn.SpaceId" name="SpaceId" class="form-select">
+                        <option value="">Автоматично</option>
+                        @foreach (var spaceId in Model.AvailableSpaces)
+                        {
+                            <option value="@spaceId">@spaceId</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-12 col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Регистрирай</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="board"><div class="card border-0 shadow-sm"><div class="card-body">Зареждане на състоянието на паркинга…</div></div></div>
+    <script>
+        fetch('@Url.Action("Board", "Parking")')
+            .then(response => {
+                if (!response.ok) throw new Error('Неуспешно зареждане на административния панел.');
+                return response.text();
+            })
+            .then(html => document.getElementById('board').innerHTML = html)
+            .catch(() => document.getElementById('board').innerHTML =
+                '<div class="alert alert-danger" role="alert">Неуспешно зареждане на административния панел.</div>');
+    </script>
+}
+else
+{
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+                    <h1 class="h3 text-primary mb-2">Паркоместа</h1>
+                    <p class="text-secondary">Изберете свободно място и регистрирайте автомобила си.</p>
+
+                    <div class="d-flex flex-wrap gap-3 mb-3" aria-label="Легенда за паркоместата">
+                        <span><span class="badge bg-success">&nbsp;</span> Свободно</span>
+                        <span><span class="badge bg-danger">&nbsp;</span> Заето</span>
+                        <span><span class="badge bg-warning">&nbsp;</span> VIP</span>
+                    </div>
+                    <div class="row row-cols-4 row-cols-sm-6 row-cols-md-8 row-cols-lg-10 g-2 mb-4"
+                         aria-label="Състояние на паркоместата">
+                        @foreach (var spaceId in Model.ParkingSpaces)
+                        {
+                            var isOccupied = Model.OccupiedSpaces.Contains(spaceId);
+                            var isVip = Model.VipOccupiedSpaces.Contains(spaceId);
+                            var spaceColor = isVip
+                                ? "btn-warning"
+                                : isOccupied
+                                    ? "btn-danger"
+                                    : "btn-success";
+                            <div class="col">
+                                <button type="button"
+                                        class="btn @spaceColor w-100 parking-space-choice"
+                                        data-space-id="@spaceId"
+                                        data-occupied="@isOccupied"
+                                        aria-pressed="false">
+                                    <span class="d-block small">Място</span>
+                                    <span class="fw-semibold">@spaceId</span>
+                                    <span class="d-block small @(isVip ? "text-dark" : "")">@(isVip ? "VIP" : isOccupied ? "Заето" : "Свободно")</span>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <div id="space-selection-status" class="form-text mb-3" aria-live="polite"></div>
+
+                    @if (Model.AvailableSpaces.Count == 0)
+                    {
+                        <div class="alert alert-info mb-0" role="status">В момента няма свободни места.</div>
+                    }
+                    else
+                    {
+                        <form asp-action="Reserve" method="post" class="row g-3" id="reserve-form">
+                            <div class="col-12">
+                                <label asp-for="CustomerParking.SpaceId" class="form-label"></label>
+                                <select asp-for="CustomerParking.SpaceId" name="SpaceId" class="form-select" id="space-selection">
+                                    @foreach (var spaceId in Model.ParkingSpaces)
+                                    {
+                                        var isOccupied = Model.OccupiedSpaces.Contains(spaceId);
+                                        if (isOccupied)
+                                        {
+                                            <option value="@spaceId" data-occupied="true">Място @spaceId — Заето</option>
+                                        }
+                                        else if (spaceId == Model.AvailableSpaces[0])
+                                        {
+                                            <option value="@spaceId" data-occupied="false" selected>Място @spaceId — Свободно</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@spaceId" data-occupied="false">Място @spaceId — Свободно</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label asp-for="CustomerParking.Vehicle" class="form-label"></label>
+                                <input asp-for="CustomerParking.Vehicle" name="Vehicle" class="form-control" autocomplete="off">
+                                <span asp-validation-for="CustomerParking.Vehicle" class="text-danger small"></span>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label asp-for="CustomerParking.Model" class="form-label"></label>
+                                <input asp-for="CustomerParking.Model" name="Model" class="form-control">
+                                <span asp-validation-for="CustomerParking.Model" class="text-danger small"></span>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Паркирай автомобила</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const spaceSelection = document.getElementById('space-selection');
+        const spaceSelectionStatus = document.getElementById('space-selection-status');
+        const occupiedMessage = 'The parking space is occupied; try another slot.';
+
+        function selectParkingSpace(spaceId) {
+            const spaceButton = document.querySelector('.parking-space-choice[data-space-id="' + spaceId + '"]');
+            const option = spaceSelection?.querySelector('option[value="' + spaceId + '"]');
+            if (spaceSelection && option) {
+                spaceSelection.value = spaceId;
+            }
+            const occupied = spaceButton?.dataset.occupied === 'True' || spaceButton?.dataset.occupied === 'true';
+            spaceSelectionStatus.textContent = occupied ? occupiedMessage : 'Selected vacant slot.';
+            spaceSelectionStatus.classList.toggle('text-danger', occupied);
+            spaceSelectionStatus.classList.toggle('text-success', !occupied);
+            document.querySelectorAll('.parking-space-choice').forEach(button => {
+                const selected = button.dataset.spaceId === String(spaceId);
+                button.setAttribute('aria-pressed', String(selected));
+                button.classList.toggle('active', selected);
+            });
+        }
+
+        document.querySelectorAll('.parking-space-choice').forEach(button => {
+            button.addEventListener('click', () => selectParkingSpace(button.dataset.spaceId));
+        });
+
+        spaceSelection?.addEventListener('change', () => selectParkingSpace(spaceSelection.value));
+
+        document.getElementById('reserve-form')?.addEventListener('submit', event => {
+            const option = spaceSelection.selectedOptions[0];
+            if (option.dataset.occupied === 'True' || option.dataset.occupied === 'true') {
+                event.preventDefault();
+                spaceSelectionStatus.textContent = occupiedMessage;
+                spaceSelectionStatus.classList.add('text-danger');
+                spaceSelectionStatus.classList.remove('text-success');
+            }
+        });
+    </script>
+}

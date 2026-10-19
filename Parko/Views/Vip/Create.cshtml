@@ -1,0 +1,69 @@
+@model VipCreateVm
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-4">New VIP client and car</h1>
+                <form asp-action="Create" method="post" class="row g-3">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="FirstName" class="form-label">Name</label>
+                        <input asp-for="FirstName" class="form-control">
+                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="LastName" class="form-label">Last Name</label>
+                        <input asp-for="LastName" class="form-control">
+                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Address" class="form-label">Address</label>
+                        <input asp-for="Address" class="form-control">
+                        <span asp-validation-for="Address" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="City" class="form-label">City</label>
+                        <input asp-for="City" class="form-control">
+                        <span asp-validation-for="City" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Country" class="form-label">Country</label>
+                        <input asp-for="Country" class="form-control">
+                        <span asp-validation-for="Country" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Phone" class="form-label">Phone</label>
+                        <input asp-for="Phone" class="form-control">
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Email" class="form-label">E-mail</label>
+                        <input asp-for="Email" class="form-control">
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Vehicle" class="form-label">Vehicle Number</label>
+                        <input asp-for="Vehicle" class="form-control">
+                        <span asp-validation-for="Vehicle" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Model" class="form-label">Model</label>
+                        <input asp-for="Model" class="form-control">
+                        <span asp-validation-for="Model" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Color" class="form-label">Color</label>
+                        <input asp-for="Color" class="form-control">
+                        <span asp-validation-for="Color" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Year" class="form-label">Year</label>
+                        <input asp-for="Year" class="form-control">
+                        <span asp-validation-for="Year" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12"><button type="submit" class="btn btn-primary">Save</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<div class="row justify-content-center py-5">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 text-primary mb-4">Вход в Parko</h1>
+                @if (TempData["Success"] is string message)
+                {
+                    <div class="alert alert-success" role="status">@message</div>
+                }
+                <form asp-action="Login" method="post">
+                    <input asp-for="ReturnUrl" type="hidden" />
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    }
+                    <div class="mb-3">
+                        <label asp-for="Login" class="form-label"></label>
+                        <input asp-for="Login" class="form-control" autocomplete="username" />
+                        <span asp-validation-for="Login" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="form-check mb-4">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label"></label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Вход</button>
+                    <a asp-action="Register" class="btn btn-outline-secondary ms-2">Регистрация</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
