@@ -10,6 +10,8 @@ public class ParkingDashboardViewModel
 
     public List<int> VipOccupiedSpaces { get; set; } = [];
 
+    public ParkingSpaceMapViewModel SpaceMap { get; set; } = new();
+
     public ParkCarViewModel CustomerParking { get; set; } = new();
 
     public CheckInVm AdminCheckIn { get; set; } = new();

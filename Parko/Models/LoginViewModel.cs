@@ -4,16 +4,16 @@ namespace Parko.Models;
 
 public class LoginViewModel
 {
-    [Required(ErrorMessage = "Въведете потребителско име или имейл.")]
-    [Display(Name = "Потребителско име или имейл")]
+    [Required(ErrorMessage = "Enter your username or email.")]
+    [Display(Name = "Username or email")]
     public string Login { get; set; } = "";
 
-    [Required(ErrorMessage = "Въведете парола.")]
+    [Required(ErrorMessage = "Enter your password.")]
     [DataType(DataType.Password)]
-    [Display(Name = "Парола")]
+    [Display(Name = "Password")]
     public string Password { get; set; } = "";
 
-    [Display(Name = "Запомни ме за 30 дни")]
+    [Display(Name = "Remember me for 30 days")]
     public bool RememberMe { get; set; }
 
     public string? ReturnUrl { get; set; }

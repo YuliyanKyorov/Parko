@@ -17,24 +17,24 @@
                             @if (User.Identity?.IsAuthenticated == true)
                             {
                                 <div class="bg-primary text-center py-2">
-                                    <span class="fw-semibold text-white">Вход</span>
+                                    <span class="fw-semibold text-white">Log in</span>
                                 </div>
                                 <div class="card-body p-4 p-lg-5">
-                                    <h1 class="h3 text-primary fw-bold mb-1">Здравейте, @User.Identity.Name!</h1>
-                                    <p class="text-secondary mb-4">Добре дошли обратно в Parko.</p>
-                                    <a asp-controller="Parking" asp-action="Index" class="btn btn-warning fw-semibold px-4">Към паркинга</a>
+                                    <h1 class="h3 text-primary fw-bold mb-1">Hello, @User.Identity.Name!</h1>
+                                    <p class="text-secondary mb-4">Welcome back to Parko.</p>
+                                    <a asp-controller="Parking" asp-action="Index" class="btn btn-warning fw-semibold px-4">Go to parking</a>
                                 </div>
                             }
                             else
                             {
                                 <div class="bg-primary text-center py-2">
-                                    <span class="fw-semibold text-white">Вход</span>
+                                    <span class="fw-semibold text-white">Log in</span>
                                     <span class="text-white-50 px-2">|</span>
-                                    <a asp-controller="Account" asp-action="Register" class="link-light text-decoration-none">Регистрация</a>
+                                    <a asp-controller="Account" asp-action="Register" class="link-light text-decoration-none">Register</a>
                                 </div>
                                 <div class="card-body p-4 p-lg-5">
-                                    <h1 class="h3 text-primary fw-bold mb-1">Добре дошли в Parko</h1>
-                                    <p class="text-secondary mb-4">Влезте, за да продължите.</p>
+                                    <h1 class="h3 text-primary fw-bold mb-1">Welcome to Parko</h1>
+                                    <p class="text-secondary mb-4">Log in to continue.</p>
                                     <form asp-controller="Account" asp-action="Login" method="post">
                                         @if (!ViewData.ModelState.IsValid)
                                         {
@@ -54,8 +54,8 @@
                                             <input asp-for="RememberMe" class="form-check-input" />
                                             <label asp-for="RememberMe" class="form-check-label"></label>
                                         </div>
-                                        <button type="submit" class="btn btn-warning fw-semibold px-4">Вход</button>
-                                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary ms-2">Създай акаунт</a>
+                                        <button type="submit" class="btn btn-warning fw-semibold px-4">Log in</button>
+                                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary ms-2">Create an account</a>
                                     </form>
                                 </div>
                             }
@@ -69,7 +69,7 @@
                     </div>
                     <div class="col">
                         <h2 class="display-5 fw-bold mb-0">Parking System</h2>
-                        <p class="fs-5 text-white-50 mb-0">По-лесно паркиране. По-добро управление.</p>
+                        <p class="fs-5 text-white-50 mb-0">Easier parking. Better management.</p>
                     </div>
                 </div>
             </div>
@@ -79,23 +79,23 @@
                     <ul class="list-unstyled mb-0">
                         <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
                             <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🚘</span>
-                            <span class="fw-semibold">Регистрация на автомобил</span>
+                            <span class="fw-semibold">Vehicle registration</span>
                         </li>
                         <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
                             <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🅿️</span>
-                            <span class="fw-semibold">Управление на паркоместа</span>
+                            <span class="fw-semibold">Parking space management</span>
                         </li>
                         <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
                             <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">⏱️</span>
-                            <span class="fw-semibold">Отчитане на време и цена</span>
+                            <span class="fw-semibold">Time and price tracking</span>
                         </li>
                         <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
                             <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">⭐</span>
-                            <span class="fw-semibold">VIP карти и точки</span>
+                            <span class="fw-semibold">VIP cards and points</span>
                         </li>
                         <li class="d-flex align-items-center gap-3 pt-3">
                             <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🛡️</span>
-                            <span class="fw-semibold">Сигурност и контрол</span>
+                            <span class="fw-semibold">Security and control</span>
                         </li>
                     </ul>
                 </div>

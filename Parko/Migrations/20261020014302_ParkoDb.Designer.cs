@@ -12,7 +12,7 @@ using Parko.Data;
 namespace Parko.Migrations
 {
     [DbContext(typeof(ParkoDbContext))]
-    [Migration("20261015195359_ParkoDb")]
+    [Migration("20261020014302_ParkoDb")]
     partial class ParkoDb
     {
         /// <inheritdoc />

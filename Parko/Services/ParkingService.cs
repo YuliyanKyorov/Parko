@@ -11,14 +11,14 @@ public class ParkingService
 
     public static string Norm(string? p) => Regex.Replace(p ?? "", @"[\s-]", "").ToUpperInvariant();
 
-    // Редовна тарифа: до 15 мин безплатно; до 6 ч 1,20 €/ч; 6–12 ч 1 €/ч; над 12 ч 12 €/ден
+    // Standard rates: first 15 minutes free; up to 6 hours €1.20/hour; 6–12 hours €1/hour; over 12 hours €12/day.
     public static decimal Price(double min) =>
         min <= 15 ? 0m :
         min <= 360 ? (decimal)Math.Ceiling(min / 60) * 1.20m :
         min <= 720 ? (decimal)Math.Ceiling(min / 60) * 1.00m :
         (decimal)Math.Ceiling(min / 1440) * 12m;
 
-    // На 1-во число точките стават 40, неизползваните се губят
+    // VIP points reset to 40 on the first day of each month; unused points expire.
     public async Task ResetPointsAsync()
     {
         var n = DateTime.Now;
@@ -39,7 +39,7 @@ public class ParkingService
     {
         var plate = Norm(vm.Vehicle);
         if (await _db.Cars.AnyAsync(c => c.Vehicle == plate && c.ReleaseTime == null))
-            return (false, "This car is already in the parking lot.");// Проверud дали автомобилът вече е паркиран.
+            return (false, "This car is already in the parking lot.");
         int spaceId;
         if (vm.SpaceId.HasValue)
         {
@@ -51,7 +51,7 @@ public class ParkingService
         {
             var taken = await _db.Cars.Where(c => c.ReleaseTime == null).Select(c => c.ParkingSpaceId).ToListAsync();
             spaceId = Enumerable.Range(1, 100).FirstOrDefault(i => !taken.Contains(i));
-            if (spaceId == 0) return (false, "There are no free spaces.");// Няма свободни места.
+            if (spaceId == 0) return (false, "There are no available spaces.");
         }
         var vip = await FindVipAsync(plate);
         bool usePoint = vip?.Client?.VipPoint is { Points: > 0 };
@@ -67,7 +67,7 @@ public class ParkingService
         });
         await _db.SaveChangesAsync();
         return (true, $"Registered at space {spaceId}." +
-            (usePoint ? " VIP: 1 point reported." : vip != null ? " VIP points exhausted – 1.20 €/hour." : ""));// Регистрация на място. VIP: 1 точка отчетена  или са изчерпани – 1,20 €/час.
+            (usePoint ? " VIP: 1 point used." : vip != null ? " VIP points exhausted – €1.20/hour." : ""));
     }
 
     public async Task<(bool ok, string msg)> ParkCarAsync(ParkCarViewModel vm, string ownerUserId)
@@ -78,12 +78,12 @@ public class ParkingService
 
         if (!await _db.ParkingSpaces.AnyAsync(space => space.Id == vm.SpaceId))
         {
-            return (false, "Избраното място не съществува.");
+            return (false, "The selected space does not exist.");
         }
 
         if (await _db.Cars.AnyAsync(car => car.Vehicle == plate && car.ReleaseTime == null))
         {
-            return (false, "Този автомобил вече е в паркинга.");
+            return (false, "This car is already in the parking lot.");
         }
 
         if (await _db.Cars.AnyAsync(car => car.ParkingSpaceId == vm.SpaceId && car.ReleaseTime == null))
@@ -105,7 +105,7 @@ public class ParkingService
         {
             await _db.SaveChangesAsync();
             await transaction.CommitAsync();
-            return (true, $"Автомобилът е регистриран на място {vm.SpaceId}.");
+            return (true, $"Your vehicle has been parked in space {vm.SpaceId}.");
         }
         catch (DbUpdateException)
         {
@@ -131,7 +131,7 @@ public class ParkingService
     {
         if (simMinutes < 0) return (false, "Minutes must be non-negative.");
         var car = await _db.Cars.FindAsync(id);
-        if (car == null || car.ReleaseTime != null) return (false, "Car not found.");// Колата не е намерена.
+        if (car == null || car.ReleaseTime != null) return (false, "Car not found.");
         car.ReleaseTime = simMinutes.HasValue ? car.EntryTime.AddMinutes(simMinutes.Value) : DateTime.Now;
         var min = (car.ReleaseTime.Value - car.EntryTime).TotalMinutes;
         car.Price = car.UsedPoint ? 0m
@@ -139,11 +139,6 @@ public class ParkingService
             : Price(min);
         await _db.SaveChangesAsync();
         return (true, $"Space {car.ParkingSpaceId} is free. Stay: {Math.Round(min)} min. Price: {car.Price:F2} €" +
-               (car.UsedPoint ? " (paid with 1 VIP point)" : ""));// Мястото е свободно. Престой: минути. Цена: евро (платено с 1 VIP точка)
+               (car.UsedPoint ? " (paid with 1 VIP point)" : ""));
     }
 }
-/* ВНИМАНИЕ: Да проверя дали има нужда от метод за извеждане на текущите заети места и свободните места, както и списък с всички коли в паркинга.
-Не съм сигурен дали това е нужно, но може да е полезно за администраторите на паркинга.
-САМО КОТО ИДЕЯ ВЪПРОСИ: Какво точно искат да виждат администраторите?
-Може би списък с всички коли, заедно с информация за тях (номер, модел, време на влизане, време на излизане, цена и т.н.) и текущото състояние
-на паркинга (колко места са заети и колко са свободни).*/

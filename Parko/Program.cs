@@ -30,6 +30,7 @@ b.Services.ConfigureApplicationCookie(options =>
 });
 b.Services.AddScoped<ParkingService>();
 b.Services.AddScoped<IAccountService, AccountService>();
+b.Services.AddScoped<IUserManagementService, UserManagementService>();
 
 var app = b.Build();
 if (!app.Environment.IsDevelopment())

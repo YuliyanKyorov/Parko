@@ -35,6 +35,16 @@ public class ParkingController : Controller {
             AvailableSpaces = parkingSpaces.Except(occupiedSpaces).ToList(),
             OccupiedSpaces = occupiedSpaces,
             VipOccupiedSpaces = vipOccupiedSpaces,
+            SpaceMap = new ParkingSpaceMapViewModel
+            {
+                IsInteractive = true,
+                Spaces = parkingSpaces.Select(spaceId => new ParkingSpaceStatusViewModel
+                {
+                    Id = spaceId,
+                    IsOccupied = occupiedSpaces.Contains(spaceId),
+                    IsVip = vipOccupiedSpaces.Contains(spaceId)
+                }).ToList()
+            },
             IsAdmin = User.IsInRole(IdentitySeeder.AdministratorRole)
         });
     }
@@ -44,8 +54,23 @@ public class ParkingController : Controller {
         var activeCars = await _db.Cars.Where(c => c.ReleaseTime == null).ToListAsync();
         var recentReleasedCars = await _db.Cars.Where(c => c.ReleaseTime != null)
             .OrderByDescending(c => c.Id).Take(50).ToListAsync();
-        ViewBag.Cars = activeCars.Concat(recentReleasedCars).OrderByDescending(c => c.Id).ToList();
-        return PartialView("_Board", await _db.ParkingSpaces.Include(s => s.Cars).OrderBy(s => s.Id).ToListAsync());
+        var spaces = await _db.ParkingSpaces
+            .Include(space => space.Cars)
+            .OrderBy(space => space.Id)
+            .ToListAsync();
+        return PartialView("_Board", new ParkingBoardViewModel
+        {
+            SpaceMap = new ParkingSpaceMapViewModel
+            {
+                Spaces = spaces.Select(space => new ParkingSpaceStatusViewModel
+                {
+                    Id = space.Id,
+                    IsOccupied = space.Current != null,
+                    IsVip = space.Current?.IsVip == true
+                }).ToList()
+            },
+            Cars = activeCars.Concat(recentReleasedCars).OrderByDescending(car => car.Id).ToList()
+        });
     }
 
     [Authorize(Roles = IdentitySeeder.AdministratorRole)]

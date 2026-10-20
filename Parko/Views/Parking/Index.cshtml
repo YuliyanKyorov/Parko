@@ -1,6 +1,6 @@
 @model ParkingDashboardViewModel
 @{
-    ViewData["Title"] = Model.IsAdmin ? "Административен панел" : "Свободни места";
+    ViewData["Title"] = Model.IsAdmin ? "Admin dashboard" : "Parking spaces";
 }
 
 @if (TempData["Ok"] is string successMessage)
@@ -16,22 +16,22 @@
 {
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
-            <h1 class="h3">Административен панел</h1>
-            <p class="text-secondary">Виждате състоянието на паркинга и можете да регистрирате и освобождавате автомобили.</p>
+            <h1 class="h3">Admin dashboard</h1>
+            <p class="text-secondary">View parking availability, register vehicles, and release parked vehicles.</p>
             <form asp-action="CheckIn" method="post" class="row g-3">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="col-12 col-md-4">
-                    <label asp-for="AdminCheckIn.Vehicle" class="form-label">Регистрационен номер</label>
+                    <label asp-for="AdminCheckIn.Vehicle" class="form-label">License plate</label>
                     <input asp-for="AdminCheckIn.Vehicle" name="Vehicle" class="form-control" autocomplete="off">
                 </div>
                 <div class="col-12 col-md-4">
-                    <label asp-for="AdminCheckIn.Model" class="form-label">Модел</label>
+                    <label asp-for="AdminCheckIn.Model" class="form-label">Model</label>
                     <input asp-for="AdminCheckIn.Model" name="Model" class="form-control">
                 </div>
                 <div class="col-12 col-md-2">
-                    <label asp-for="AdminCheckIn.SpaceId" class="form-label">Място</label>
+                    <label asp-for="AdminCheckIn.SpaceId" class="form-label">Space</label>
                     <select asp-for="AdminCheckIn.SpaceId" name="SpaceId" class="form-select">
-                        <option value="">Автоматично</option>
+                        <option value="">Automatic</option>
                         @foreach (var spaceId in Model.AvailableSpaces)
                         {
                             <option value="@spaceId">@spaceId</option>
@@ -39,21 +39,21 @@
                     </select>
                 </div>
                 <div class="col-12 col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Регистрирай</button>
+                    <button type="submit" class="btn btn-primary w-100">Register vehicle</button>
                 </div>
             </form>
         </div>
     </div>
-    <div id="board"><div class="card border-0 shadow-sm"><div class="card-body">Зареждане на състоянието на паркинга…</div></div></div>
+    <div id="board"><div class="card border-0 shadow-sm"><div class="card-body">Loading parking status…</div></div></div>
     <script>
         fetch('@Url.Action("Board", "Parking")')
             .then(response => {
-                if (!response.ok) throw new Error('Неуспешно зареждане на административния панел.');
+                if (!response.ok) throw new Error('Failed to load the admin dashboard.');
                 return response.text();
             })
             .then(html => document.getElementById('board').innerHTML = html)
             .catch(() => document.getElementById('board').innerHTML =
-                '<div class="alert alert-danger" role="alert">Неуспешно зареждане на административния панел.</div>');
+                '<div class="alert alert-danger" role="alert">Failed to load the admin dashboard.</div>');
     </script>
 }
 else
@@ -62,43 +62,22 @@ else
         <div class="col-12 col-lg-9">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4 p-lg-5">
-                    <h1 class="h3 text-primary mb-2">Паркоместа</h1>
-                    <p class="text-secondary">Изберете свободно място и регистрирайте автомобила си.</p>
+                    <h1 class="h3 text-primary mb-2">Parking spaces</h1>
+                    <p class="text-secondary">Select an available space and register your vehicle.</p>
 
-                    <div class="d-flex flex-wrap gap-3 mb-3" aria-label="Легенда за паркоместата">
-                        <span><span class="badge bg-success">&nbsp;</span> Свободно</span>
-                        <span><span class="badge bg-danger">&nbsp;</span> Заето</span>
+                    <div class="d-flex flex-wrap gap-3 mb-3" aria-label="Parking space legend">
+                        <span><span class="badge bg-success">&nbsp;</span> Available</span>
+                        <span><span class="badge bg-danger">&nbsp;</span> Occupied</span>
                         <span><span class="badge bg-warning">&nbsp;</span> VIP</span>
                     </div>
-                    <div class="row row-cols-4 row-cols-sm-6 row-cols-md-8 row-cols-lg-10 g-2 mb-4"
-                         aria-label="Състояние на паркоместата">
-                        @foreach (var spaceId in Model.ParkingSpaces)
-                        {
-                            var isOccupied = Model.OccupiedSpaces.Contains(spaceId);
-                            var isVip = Model.VipOccupiedSpaces.Contains(spaceId);
-                            var spaceColor = isVip
-                                ? "btn-warning"
-                                : isOccupied
-                                    ? "btn-danger"
-                                    : "btn-success";
-                            <div class="col">
-                                <button type="button"
-                                        class="btn @spaceColor w-100 parking-space-choice"
-                                        data-space-id="@spaceId"
-                                        data-occupied="@isOccupied"
-                                        aria-pressed="false">
-                                    <span class="d-block small">Място</span>
-                                    <span class="fw-semibold">@spaceId</span>
-                                    <span class="d-block small @(isVip ? "text-dark" : "")">@(isVip ? "VIP" : isOccupied ? "Заето" : "Свободно")</span>
-                                </button>
-                            </div>
-                        }
+                    <div class="mb-4">
+                        <partial name="_SpaceMap" model="Model.SpaceMap" />
                     </div>
                     <div id="space-selection-status" class="form-text mb-3" aria-live="polite"></div>
 
                     @if (Model.AvailableSpaces.Count == 0)
                     {
-                        <div class="alert alert-info mb-0" role="status">В момента няма свободни места.</div>
+                        <div class="alert alert-info mb-0" role="status">There are no available spaces at the moment.</div>
                     }
                     else
                     {
@@ -111,15 +90,15 @@ else
                                         var isOccupied = Model.OccupiedSpaces.Contains(spaceId);
                                         if (isOccupied)
                                         {
-                                            <option value="@spaceId" data-occupied="true">Място @spaceId — Заето</option>
+                                            <option value="@spaceId" data-occupied="true">Space @spaceId — Occupied</option>
                                         }
                                         else if (spaceId == Model.AvailableSpaces[0])
                                         {
-                                            <option value="@spaceId" data-occupied="false" selected>Място @spaceId — Свободно</option>
+                                            <option value="@spaceId" data-occupied="false" selected>Space @spaceId — Available</option>
                                         }
                                         else
                                         {
-                                            <option value="@spaceId" data-occupied="false">Място @spaceId — Свободно</option>
+                                            <option value="@spaceId" data-occupied="false">Space @spaceId — Available</option>
                                         }
                                     }
                                 </select>
@@ -135,7 +114,7 @@ else
                                 <span asp-validation-for="CustomerParking.Model" class="text-danger small"></span>
                             </div>
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Паркирай автомобила</button>
+                                <button type="submit" class="btn btn-primary">Park vehicle</button>
                             </div>
                         </form>
                     }

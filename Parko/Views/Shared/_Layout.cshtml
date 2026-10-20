@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,29 +13,37 @@
                 <span aria-hidden="true">⌂</span> Parko
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation"
-                    aria-controls="mainNavigation" aria-expanded="false" aria-label="Отвори менюто">
+                    aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNavigation">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <li class="nav-item"><a class="nav-link" asp-controller="Parking" asp-action="Index">Свободни места</a></li>
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Vip" asp-action="Index">VIP клиенти</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Users" asp-action="Index">Users</a></li>
+                        }
+                        <li class="nav-item"><a class="nav-link" asp-controller="Parking" asp-action="Index">Parking spaces</a></li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Vip" asp-action="Index">VIP clients</a></li>
                         }
                         <li class="nav-item"><span class="navbar-text px-lg-2">@User.Identity.Name</span></li>
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item"><a class="nav-link text-warning" asp-controller="Account" asp-action="CloseAccount">Delete account</a></li>
+                        }
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post">
-                                <button type="submit" class="btn btn-outline-light btn-sm">Изход</button>
+                                <button type="submit" class="btn btn-outline-light btn-sm">Log out</button>
                             </form>
                         </li>
                     }
                     else
                     {
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Вход</a></li>
-                        <li class="nav-item"><a class="btn btn-outline-light btn-sm" asp-controller="Account" asp-action="Register">Регистрация</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Log in</a></li>
+                        <li class="nav-item"><a class="btn btn-outline-light btn-sm" asp-controller="Account" asp-action="Register">Register</a></li>
                     }
                 </ul>
             </div>

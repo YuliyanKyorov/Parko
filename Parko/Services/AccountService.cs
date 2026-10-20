@@ -46,4 +46,41 @@ public class AccountService : IAccountService
     }
 
     public Task LogoutAsync() => _signInManager.SignOutAsync();
+
+    public async Task<AccountClosureResult> CloseAccountAsync(string userId, string password)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            return AccountClosureResult.NotFound;
+        }
+
+        if (await _userManager.IsInRoleAsync(user, IdentitySeeder.AdministratorRole))
+        {
+            return AccountClosureResult.Administrator;
+        }
+
+        if (!await _userManager.CheckPasswordAsync(user, password))
+        {
+            return AccountClosureResult.InvalidPassword;
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+        {
+            return AccountClosureResult.Failed;
+        }
+
+        await _signInManager.SignOutAsync();
+        return AccountClosureResult.Closed;
+    }
+}
+
+public enum AccountClosureResult
+{
+    Closed,
+    NotFound,
+    Administrator,
+    InvalidPassword,
+    Failed
 }

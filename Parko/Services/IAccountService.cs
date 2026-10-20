@@ -9,4 +9,6 @@ public interface IAccountService
     Task<SignInResult> LoginAsync(string login, string password, bool rememberMe);
 
     Task LogoutAsync();
+
+    Task<AccountClosureResult> CloseAccountAsync(string userId, string password);
 }

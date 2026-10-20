@@ -1,55 +1,26 @@
-﻿@model List<ParkingSpace>
-@{
-    var cars = (List<Car>)ViewBag.Cars;
-}
-<div class="card border-0 shadow-sm mb-3">
-  <div class="card-body p-4">
-    <h2 class="h4 mb-3">Паркоместа: @Model.Count(s => s.Current == null) свободни / @Model.Count(s => s.Current != null) заети</h2>
-    <div class="d-flex flex-wrap gap-3 mb-3" aria-label="Легенда за паркоместата">
-      <span><span class="badge bg-success">&nbsp;</span> Свободно</span>
-      <span><span class="badge bg-danger">&nbsp;</span> Заето</span>
-      <span><span class="badge bg-warning">&nbsp;</span> VIP</span>
-    </div>
-    <div class="row row-cols-4 row-cols-sm-6 row-cols-md-8 row-cols-lg-10 g-2" aria-label="Състояние на паркоместата">
-        @foreach (var s in Model)
-        {
-            var c = s.Current;
-            var color = c == null
-                ? "btn-success"
-                : c.IsVip
-                    ? "btn-warning"
-                    : "btn-danger";
-            if (c == null)
-            {
-                <div class="col">
-                  <div class="btn @color w-100 h-100">
-                    <span class="d-block">Място</span>
-                    <span class="fw-semibold">@s.Id</span>
-                    <span class="d-block">Свободно</span>
-                  </div>
-                </div>
-            }
-            else
-            {
-                <div class="col">
-                  <div class="btn @color w-100 h-100">
-                    <span class="d-block">Място</span>
-                    <span class="fw-semibold">@s.Id</span>
-                    <span class="d-block @(c.IsVip ? "text-dark" : "")">@(c.IsVip ? "VIP" : "Заето")</span>
-                  </div>
-                </div>
-            }
-        }
+@model ParkingBoardViewModel
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-9">
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-body p-4 p-lg-5">
+        <h2 class="h4 mb-3">Parking spaces: @Model.SpaceMap.Spaces.Count(s => !s.IsOccupied) available / @Model.SpaceMap.Spaces.Count(s => s.IsOccupied) occupied</h2>
+        <div class="d-flex flex-wrap gap-3 mb-3" aria-label="Parking space legend">
+          <span><span class="badge bg-success">&nbsp;</span> Available</span>
+          <span><span class="badge bg-danger">&nbsp;</span> Occupied</span>
+          <span><span class="badge bg-warning">&nbsp;</span> VIP</span>
+        </div>
+        <partial name="_SpaceMap" model="Model.SpaceMap" />
+      </div>
     </div>
   </div>
 </div>
 <div class="card border-0 shadow-sm mb-3">
   <div class="card-body">
-    <h2 class="h4">Car (last 50)</h2>
+    <h2 class="h4">Cars (latest 50)</h2>
     <div class="table-responsive">
     <table class="table table-sm table-striped align-middle">
-        <tr><th>Id</th><th>Vehicle</th><th>Model</th><th>Space</th><th>Entry time</th><th>Release time</th><th>Price</th><th></th></tr>
-        @foreach (var c in cars)
+        <tr><th>ID</th><th>License plate</th><th>Model</th><th>Space</th><th>Entry time</th><th>Exit time</th><th>Price</th><th></th></tr>
+        @foreach (var c in Model.Cars)
         {
             <tr>
                 <td>@c.Id</td>
@@ -64,8 +35,8 @@
                     {
                         <form asp-controller="Parking" asp-action="CheckOut" method="post" class="d-flex gap-2">
                             <input type="hidden" name="id" value="@c.Id">
-                            <input name="simMinutes" class="form-control form-control-sm" type="number" min="0" placeholder="мин (тест)" aria-label="Тестови минути">
-                            <button type="submit" class="btn btn-primary btn-sm text-nowrap">Излизане</button>
+                            <input name="simMinutes" class="form-control form-control-sm" type="number" min="0" placeholder="Minutes (test)" aria-label="Test duration in minutes">
+                            <button type="submit" class="btn btn-primary btn-sm text-nowrap">Check out</button>
                         </form>
                     }
                 </td>

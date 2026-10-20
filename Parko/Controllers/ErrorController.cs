@@ -4,8 +4,8 @@ namespace Parko.Controllers;
 
 public class ErrorController : Controller
 {
-    // /Error      -> необработена грешка (500)
-    // /Error/404  -> страницата не е намерена
+    // /Error      -> unhandled error (500)
+    // /Error/404  -> page not found
     public IActionResult Index(int? id)
     {
         int code = id ?? 500;
