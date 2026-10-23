@@ -42,7 +42,7 @@ Requires the .NET 8 SDK and SQL Server LocalDB (or another SQL Server instance).
 
 Registration requires a unique email address and a password with at least 8 characters, an uppercase and lowercase letter, a digit, and a special character. Identity locks accounts after five failed sign-in attempts.
 
-In the `Development` environment, the application automatically creates an `admin` administrator account with the password `admin` if it does not already exist. These weak demo credentials are intended for local testing only. In `Production`, set `AdminAccount__Password` as a protected environment variable/secret (and optionally `AdminAccount__UserName`) before startup; the application refuses to start if the administrator password is missing. Use a unique strong password and never expose the development account to the internet.
+In the `Development` environment, the application automatically creates an `admin` administrator account with the password `admin` if it does not already exist. These weak demo credentials are intended for local testing only. In `Production`, set `AdminAccount__Password` as a protected environment variable/secret (and optionally `AdminAccount__UserName`) before startup; the application refuses to start if the administrator password is missing. 
 
 ---
 
@@ -104,4 +104,4 @@ Parko е уеб приложение на ASP.NET Core MVC за управлен
 
 В среда `Development` приложението само създава администратор с потребителско име `admin` и парола `admin`, ако такъв още не съществува. Тези слаби данни са само за локално тестване.
 
-В `Production` преди стартиране трябва да зададете `AdminAccount__Password` като защитена променлива на средата или тайна (по желание и `AdminAccount__UserName`). Ако паролата липсва, приложението отказва да тръгне. Ползвайте уникална и сигурна парола и никога не оставяйте тестовия акаунт достъпен от интернет.
+В `Production` преди стартиране трябва да зададете `AdminAccount__Password` като защитена променлива на средата или тайна (по желание и `AdminAccount__UserName`). 
