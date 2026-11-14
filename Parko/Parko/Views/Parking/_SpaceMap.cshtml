@@ -1,0 +1,27 @@
+@model ParkingSpaceMapViewModel
+
+<div class="row g-1" aria-label="Parking space status">
+    @foreach (var space in Model.Spaces)
+    {
+        var colorClass = space.IsVip
+            ? "btn-warning"
+            : space.IsOccupied
+                ? "btn-danger"
+                : "btn-success";
+        var status = space.IsVip ? "VIP" : space.IsOccupied ? "Occupied" : "Available";
+        <div class="col-2 col-md-1">
+            <div class="ratio ratio-1x1">
+                <button type="button"
+                        class="btn btn-sm @colorClass w-100 h-100 p-1 d-flex flex-column justify-content-center @(Model.IsInteractive ? "parking-space-choice" : "")"
+                        data-space-id="@space.Id"
+                        data-occupied="@space.IsOccupied"
+                        aria-label="Space @space.Id: @status"
+                        aria-pressed="false"
+                        disabled="@(!Model.IsInteractive)">
+                    <span class="d-block small">#@space.Id</span>
+                    <span class="d-block small">@status</span>
+                </button>
+            </div>
+        </div>
+    }
+</div>

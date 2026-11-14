@@ -1,0 +1,25 @@
+@model CloseAccountViewModel
+@{
+    ViewData["Title"] = "Close account";
+}
+
+<div class="row justify-content-center py-5">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 text-danger mb-3">Close your account</h1>
+                <p>This permanently deletes your account. This action cannot be undone.</p>
+                <form asp-action="CloseAccount" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control" autocomplete="current-password">
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Permanently close account</button>
+                    <a asp-controller="Parking" asp-action="Index" class="btn btn-outline-secondary ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

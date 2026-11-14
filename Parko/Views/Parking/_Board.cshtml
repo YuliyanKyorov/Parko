@@ -1,0 +1,56 @@
+@model ParkingBoardViewModel
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-9">
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-body p-4 p-lg-5">
+        <h2 class="h4 mb-3">Parking spaces: @Model.SpaceMap.Spaces.Count(s => !s.IsOccupied) available / @Model.SpaceMap.Spaces.Count(s => s.IsOccupied) occupied</h2>
+        <div class="d-flex flex-wrap gap-3 mb-3" aria-label="Parking space legend">
+          <span><span class="badge bg-success">&nbsp;</span> Available</span>
+          <span><span class="badge bg-danger">&nbsp;</span> Occupied</span>
+          <span><span class="badge bg-warning">&nbsp;</span> VIP</span>
+        </div>
+        <partial name="_SpaceMap" model="Model.SpaceMap" />
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card border-0 shadow-sm mb-3">
+  <div class="card-body">
+    <h2 class="h4">Cars (latest 50)</h2>
+    <div class="table-responsive">
+    <table class="table table-sm table-striped align-middle">
+        <tr><th>ID</th><th>License plate</th><th>Model</th><th>Space</th><th>Entry time</th><th>Exit time</th><th>Price</th><th>Actions</th></tr>
+        @foreach (var c in Model.Cars)
+        {
+            <tr>
+                <td>@c.Id</td>
+                <td>@c.Vehicle @(c.IsVip ? "⭐" : "")</td>
+                <td>@c.Model</td>
+                <td>@c.ParkingSpaceId</td>
+                <td>@c.EntryTime</td>
+                <td>@c.ReleaseTime</td>
+                <td>@(c.UsedPoint ? "1 VIP" : c.Price.HasValue ? c.Price.Value.ToString("F2") + " €" : "")</td>
+                <td>
+                    @if (c.ReleaseTime == null)
+                    {
+                        <form asp-controller="Parking" asp-action="CheckOut" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="id" value="@c.Id">
+                            <input name="simMinutes" class="form-control form-control-sm" type="number" min="0" max="2147483647" placeholder="Minutes (test)" aria-label="Test duration in minutes">
+                            <button type="submit" class="btn btn-primary btn-sm text-nowrap">Check out</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-controller="Parking" asp-action="DeleteCar" method="post"
+                              onsubmit="return confirm('Delete this completed parking record? This cannot be undone.');">
+                            <input type="hidden" name="id" value="@c.Id">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete record</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+  </div>
+</div>

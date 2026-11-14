@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Parko/Parko.csproj" />
+  <Project Path="Parko.Tests/Parko.Tests.csproj" />
+</Solution>

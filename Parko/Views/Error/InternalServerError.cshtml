@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "500 - Internal server error";
+}
+
+<main class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <section class="card border-0 shadow-sm text-center">
+            <div class="card-body p-4 p-lg-5">
+                <p class="display-1 fw-bold text-danger mb-0">500</p>
+                <h1 class="h3 mb-3">Internal server error</h1>
+                <p class="text-secondary">Something went wrong while processing your request. Please try again later.</p>
+                <p class="text-secondary small">Reference: @ViewBag.RequestId</p>
+                <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Go to home</a>
+            </div>
+        </section>
+    </div>
+</main>

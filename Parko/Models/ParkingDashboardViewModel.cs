@@ -1,0 +1,20 @@
+namespace Parko.Models;
+
+public class ParkingDashboardViewModel
+{
+    public List<int> ParkingSpaces { get; set; } = [];
+
+    public List<int> AvailableSpaces { get; set; } = [];
+
+    public List<int> OccupiedSpaces { get; set; } = [];
+
+    public List<int> VipOccupiedSpaces { get; set; } = [];
+
+    public ParkingSpaceMapViewModel SpaceMap { get; set; } = new();
+
+    public ParkCarViewModel CustomerParking { get; set; } = new();
+
+    public CheckInViewModel AdminCheckIn { get; set; } = new();
+
+    public bool IsAdmin { get; set; }
+}

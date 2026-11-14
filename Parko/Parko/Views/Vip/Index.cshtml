@@ -1,0 +1,87 @@
+@model List<Client>
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+            <h1 class="h3 mb-0">VIP clients</h1>
+            <a class="btn btn-primary" asp-action="Create">+ New VIP client</a>
+        </div>
+        @if (TempData["Ok"] is string successMessage)
+        {
+            <div class="alert alert-success" role="status">@successMessage</div>
+        }
+        @if (TempData["Err"] is string errorMessage)
+        {
+            <div class="alert alert-danger" role="alert">@errorMessage</div>
+        }
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Contact</th>
+                        <th>VIP points</th>
+                        <th>Vehicles</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var client in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@client.FirstName @client.LastName</strong><br />
+                                <span class="text-secondary">@client.Address, @client.City, @client.Country</span>
+                            </td>
+                            <td>@client.Phone<br />@client.Email</td>
+                            <td>
+                                @if (client.VipPoint is null)
+                                {
+                                    <span class="text-secondary">No points record</span>
+                                }
+                                else
+                                {
+                                    <span>@client.VipPoint.Points / @VipPoint.MonthlyPoints</span><br />
+                                    <small class="text-secondary">@client.VipPoint.ChargingDays days until reset</small>
+                                }
+                            </td>
+                            <td>
+                                @if (client.VipCarRecords.Count == 0)
+                                {
+                                    <span class="text-secondary">No vehicles</span>
+                                }
+                                @foreach (var vipCar in client.VipCarRecords)
+                                {
+                                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                        <span>@vipCar.Vehicle — @vipCar.Model, @vipCar.Color, @vipCar.Year</span>
+                                        <a asp-action="EditCar" asp-route-id="@vipCar.Id" class="btn btn-outline-secondary btn-sm">Edit</a>
+                                        <form asp-action="DeleteCar" asp-route-id="@vipCar.Id" method="post"
+                                              onsubmit="return confirm('Delete this VIP vehicle?');">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                        </form>
+                                    </div>
+                                }
+                                <a asp-action="CreateCar" asp-route-clientId="@client.Id" class="btn btn-outline-primary btn-sm mt-1">Add vehicle</a>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column gap-2 align-items-start">
+                                    <a asp-action="EditClient" asp-route-id="@client.Id" class="btn btn-outline-primary btn-sm">Edit client / points</a>
+                                    @if (client.VipPoint is not null)
+                                    {
+                                        <form asp-action="DeletePoints" asp-route-clientId="@client.Id" method="post"
+                                              onsubmit="return confirm('Delete this client’s VIP points?');">
+                                            <button type="submit" class="btn btn-outline-warning btn-sm">Delete points</button>
+                                        </form>
+                                    }
+                                    <form asp-action="DeleteClient" asp-route-id="@client.Id" method="post"
+                                          onsubmit="return confirm('Delete this client, all VIP vehicles, and their points?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Delete client</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
