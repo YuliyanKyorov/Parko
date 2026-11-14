@@ -76,28 +76,79 @@
 
             <aside class="col-12 col-lg-3">
                 <div class="rounded-4 bg-primary bg-opacity-75 p-3 p-xl-4 shadow">
-                    <ul class="list-unstyled mb-0">
-                        <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🚘</span>
-                            <span class="fw-semibold">Vehicle registration</span>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🅿️</span>
-                            <span class="fw-semibold">Parking space management</span>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">⏱️</span>
-                            <span class="fw-semibold">Time and price tracking</span>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 py-3 border-bottom border-light border-opacity-25">
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">⭐</span>
-                            <span class="fw-semibold">VIP cards and points</span>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 pt-3">
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-3 border border-2 border-light p-2 fs-3" aria-hidden="true">🛡️</span>
-                            <span class="fw-semibold">Security and control</span>
-                        </li>
-                    </ul>
+                    <div class="d-grid gap-2" id="homeGuideMenu">
+                        <div>
+                            <button class="btn btn-outline-light w-100 text-start d-flex align-items-center gap-3"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#vehicleRegistrationGuide"
+                                    aria-expanded="false" aria-controls="vehicleRegistrationGuide">
+                                <span class="fs-3" aria-hidden="true">🚘</span>
+                                <span class="fw-semibold">Vehicle registration</span>
+                            </button>
+                            <div class="collapse" id="vehicleRegistrationGuide" data-bs-parent="#homeGuideMenu">
+                                <div class="rounded-3 bg-dark bg-opacity-25 p-3 mt-2 small">
+                                    <ol class="mb-0 ps-3">
+                                        <li>Select <strong>Register</strong> and complete the account form.</li>
+                                        <li>Log in with your account.</li>
+                                        <li>Open <strong>Parking spaces</strong>, choose an available space, enter your license plate and vehicle model, then select <strong>Park vehicle</strong>.</li>
+                                    </ol>
+                                    <p class="mb-0 mt-2">Administrators can register vehicles from the Admin dashboard.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-light w-100 text-start d-flex align-items-center gap-3"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#parkingGuide"
+                                    aria-expanded="false" aria-controls="parkingGuide">
+                                <span class="fs-3" aria-hidden="true">🅿️</span>
+                                <span class="fw-semibold">Parking space management</span>
+                            </button>
+                            <div class="collapse" id="parkingGuide" data-bs-parent="#homeGuideMenu">
+                                <div class="rounded-3 bg-dark bg-opacity-25 p-3 mt-2 small">
+                                    <p class="mb-2"><strong class="text-success">Green:</strong> available. <strong class="text-danger">Red:</strong> occupied. <strong class="text-warning">Yellow:</strong> VIP.</p>
+                                    <p class="mb-0">Choose an available space to park. Occupied spaces cannot be selected.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-light w-100 text-start d-flex align-items-center gap-3"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#timePriceGuide"
+                                    aria-expanded="false" aria-controls="timePriceGuide">
+                                <span class="fs-3" aria-hidden="true">⏱️</span>
+                                <span class="fw-semibold">Time and price tracking</span>
+                            </button>
+                            <div class="collapse" id="timePriceGuide" data-bs-parent="#homeGuideMenu">
+                                <div class="rounded-3 bg-dark bg-opacity-25 p-3 mt-2 small">
+                                    <p class="mb-0">Parking time is measured from vehicle entry to check-out. The final price is calculated at check-out. Administrators can review entry time, exit time, duration, and price in the dashboard.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-light w-100 text-start d-flex align-items-center gap-3"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#vipGuide"
+                                    aria-expanded="false" aria-controls="vipGuide">
+                                <span class="fs-3" aria-hidden="true">⭐</span>
+                                <span class="fw-semibold">VIP cards and points</span>
+                            </button>
+                            <div class="collapse" id="vipGuide" data-bs-parent="#homeGuideMenu">
+                                <div class="rounded-3 bg-dark bg-opacity-25 p-3 mt-2 small">
+                                    <p class="mb-0">VIP vehicles are recognized by their registered license plate. VIP pricing applies automatically, and an available point can cover one parking stay.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-light w-100 text-start d-flex align-items-center gap-3"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#securityGuide"
+                                    aria-expanded="false" aria-controls="securityGuide">
+                                <span class="fs-3" aria-hidden="true">🛡️</span>
+                                <span class="fw-semibold">Security and control</span>
+                            </button>
+                            <div class="collapse" id="securityGuide" data-bs-parent="#homeGuideMenu">
+                                <div class="rounded-3 bg-dark bg-opacity-25 p-3 mt-2 small">
+                                    <p class="mb-0">If there is a problem, contact the parking operator on site or call <a class="link-light fw-semibold" href="tel:08777400">0877 7400</a>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </aside>
         </div>

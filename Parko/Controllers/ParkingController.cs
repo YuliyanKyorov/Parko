@@ -82,7 +82,9 @@ public class ParkingController : Controller
                 {
                     Id = space.Id,
                     IsOccupied = space.Current != null,
-                    IsVip = space.Current?.IsVip == true
+                    IsVip = space.Current?.IsVip == true,
+                    LicensePlate = space.Current?.Vehicle,
+                    VehicleModel = space.Current?.Model
                 }).ToList()
             },
             Cars = activeCars.Concat(recentReleasedCars).OrderByDescending(car => car.Id).ToList()

@@ -7,4 +7,8 @@ public class ParkingSpaceStatusViewModel
     public bool IsOccupied { get; set; }
 
     public bool IsVip { get; set; }
+
+    public string? LicensePlate { get; set; }
+
+    public string? VehicleModel { get; set; }
 }

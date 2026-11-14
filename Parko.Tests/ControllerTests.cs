@@ -58,6 +58,55 @@ public class ControllerTests
     }
 
     [Fact]
+    public async Task Parking_admin_board_includes_details_for_occupied_spaces_only()
+    {
+        await using var database = await SqliteParkoDatabase.CreateAsync();
+        database.Context.Cars.Add(new Car
+        {
+            Vehicle = "AB123",
+            Model = "Test sedan",
+            EntryTime = DateTime.Now,
+            ParkingSpaceId = 1
+        });
+        await database.Context.SaveChangesAsync();
+        var controller = new ParkingController(database.Context, new ParkingService(database.Context));
+
+        var result = Assert.IsType<PartialViewResult>(await controller.Board());
+        var model = Assert.IsType<ParkingBoardViewModel>(result.Model);
+        var occupiedSpace = model.SpaceMap.Spaces.Single(space => space.Id == 1);
+        var availableSpace = model.SpaceMap.Spaces.Single(space => space.Id == 2);
+
+        Assert.Equal("AB123", occupiedSpace.LicensePlate);
+        Assert.Equal("Test sedan", occupiedSpace.VehicleModel);
+        Assert.Null(availableSpace.LicensePlate);
+        Assert.Null(availableSpace.VehicleModel);
+    }
+
+    [Fact]
+    public void Home_index_displays_homepage_for_authenticated_users()
+    {
+        var controller = new HomeController
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext
+                {
+                    User = new System.Security.Claims.ClaimsPrincipal(
+                        new System.Security.Claims.ClaimsIdentity(
+                            [new System.Security.Claims.Claim(
+                                System.Security.Claims.ClaimTypes.Name,
+                                "test-user")],
+                            "test"))
+                }
+            }
+        };
+
+        var result = Assert.IsType<ViewResult>(controller.Index());
+
+        Assert.IsType<LoginViewModel>(result.Model);
+    }
+
+    [Fact]
     public async Task Account_login_renders_view_for_invalid_model()
     {
         var controller = new AccountController(Mock.Of<IAccountService>());
